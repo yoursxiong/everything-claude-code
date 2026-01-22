@@ -1,54 +1,54 @@
-# Session: Memory Leak Investigation
-**Date:** 2026-01-17
-**Started:** 09:00
-**Last Updated:** 12:00
+# 会话：内存泄漏调查
+**日期：** 2026-01-17
+**开始时间：** 09:00
+**最后更新：** 12:00
 
 ---
 
-## Current State
+## 当前状态
 
-Investigating memory leak in production. Heap growing unbounded over 24h period.
+正在调查生产环境中的内存泄漏。堆内存（Heap）在 24 小时内无限制增长。
 
-### Completed
-- [x] Set up heap snapshots in staging
-- [x] Identified leak source: event listeners not being cleaned up
-- [x] Fixed leak in WebSocket handler
-- [x] Verified fix with 4h soak test
+### 已完成
+- [x] 在预发布环境（Staging）设置堆快照
+- [x] 确定泄漏源：事件监听器（event listeners）未被清理
+- [x] 修复 WebSocket 处理程序中的泄漏
+- [x] 通过 4 小时的浸没测试（soak test）验证修复
 
-### Root Cause
-WebSocket `onMessage` handlers were being added on reconnect but not removed on disconnect. After ~1000 reconnects, memory grew from 200MB to 2GB.
+### 根本原因
+WebSocket 的 `onMessage` 处理程序在重连时被添加，但在断开连接时未被移除。在大约 1000 次重连后，内存从 200MB 增长到了 2GB。
 
-### The Fix
+### 修复方案
 ```javascript
-// Before (leaking)
+// 修复前（存在泄漏）
 socket.on('connect', () => {
   socket.on('message', handleMessage)
 })
 
-// After (fixed)
+// 修复后
 socket.on('connect', () => {
-  socket.off('message', handleMessage) // Remove old listener first
+  socket.off('message', handleMessage) // 先移除旧的监听器
   socket.on('message', handleMessage)
 })
 
-// Even better - use once or cleanup on disconnect
+// 更好的做法 - 使用 once 或在断开连接时进行清理
 socket.on('disconnect', () => {
   socket.removeAllListeners('message')
 })
 ```
 
-### Debugging Technique Worth Saving
-1. Take heap snapshot at T=0
-2. Force garbage collection: `global.gc()`
-3. Run suspected operation N times
-4. Take heap snapshot at T=1
-5. Compare snapshots - look for objects with count = N
+### 值得保存的调试技巧
+1. 在 T=0 时获取堆快照（heap snapshot）
+2. 强制进行垃圾回收：`global.gc()`
+3. 运行疑似产生问题的操作 N 次
+4. 在 T=1 时获取堆快照
+5. 对比快照 - 寻找计数（count）等于 N 的对象
 
-### Notes for Next Session
-- Add memory monitoring alert at 1GB threshold
-- Document this debugging pattern for team
+### 下次会话笔记
+- 在 1GB 阈值处添加内存监控警报
+- 为团队归档此调试模式
 
-### Context to Load
+### 需要加载的上下文
 ```
 src/services/websocket.js
 ```
