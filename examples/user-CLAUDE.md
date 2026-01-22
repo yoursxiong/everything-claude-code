@@ -1,98 +1,98 @@
-# User-Level CLAUDE.md Example
+# 用户级 CLAUDE.md 示例
 
-This is an example user-level CLAUDE.md file. Place at `~/.claude/CLAUDE.md`.
+这是一个示例用户级 `CLAUDE.md` 文件。请将其放在 `~/.claude/CLAUDE.md`。
 
-User-level configs apply globally across all projects. Use for:
-- Personal coding preferences
-- Universal rules you always want enforced
-- Links to your modular rules
-
----
-
-## Core Philosophy
-
-You are Claude Code. I use specialized agents and skills for complex tasks.
-
-**Key Principles:**
-1. **Agent-First**: Delegate to specialized agents for complex work
-2. **Parallel Execution**: Use Task tool with multiple agents when possible
-3. **Plan Before Execute**: Use Plan Mode for complex operations
-4. **Test-Driven**: Write tests before implementation
-5. **Security-First**: Never compromise on security
+用户级配置会全局应用于所有项目。用于：
+- 个人编码偏好
+- 您希望始终强制执行的通用规则
+- 指向您模块化规则的链接
 
 ---
 
-## Modular Rules
+## 核心理念
 
-Detailed guidelines are in `~/.claude/rules/`:
+您是 Claude Code。在处理复杂任务时，我会使用专门的智能体 (Agents) 和技能 (Skills)。
 
-| Rule File | Contents |
+**关键原则：**
+1. **智能体优先 (Agent-First)**：将复杂工作委派给专门的智能体
+2. **并行执行**：尽可能在任务中同时使用多个智能体
+3. **先计划后执行**：对复杂操作使用“计划模式”
+4. **测试驱动**：在实现之前先编写测试
+5. **安全第一**：绝不牺牲安全性
+
+---
+
+## 模块化规则
+
+详细指南位于 `~/.claude/rules/`：
+
+| 规则文件 | 内容 |
 |-----------|----------|
-| security.md | Security checks, secret management |
-| coding-style.md | Immutability, file organization, error handling |
-| testing.md | TDD workflow, 80% coverage requirement |
-| git-workflow.md | Commit format, PR workflow |
-| agents.md | Agent orchestration, when to use which agent |
-| patterns.md | API response, repository patterns |
-| performance.md | Model selection, context management |
+| security.md | 安全检查、机密管理 |
+| coding-style.md | 不可变性、文件组织、错误处理 |
+| testing.md | TDD 工作流、80% 覆盖率要求 |
+| git-workflow.md | 提交格式、PR 工作流 |
+| agents.md | 智能体编排、何时使用哪个智能体 |
+| patterns.md | API 响应、仓储模式 (Repository Patterns) |
+| performance.md | 模型选择、上下文管理 |
 
 ---
 
-## Available Agents
+## 可用智能体
 
-Located in `~/.claude/agents/`:
+位于 `~/.claude/agents/`：
 
-| Agent | Purpose |
+| 智能体 | 用途 |
 |-------|---------|
-| planner | Feature implementation planning |
-| architect | System design and architecture |
-| tdd-guide | Test-driven development |
-| code-reviewer | Code review for quality/security |
-| security-reviewer | Security vulnerability analysis |
-| build-error-resolver | Build error resolution |
-| e2e-runner | Playwright E2E testing |
-| refactor-cleaner | Dead code cleanup |
-| doc-updater | Documentation updates |
+| planner | 功能实现计划 |
+| architect | 系统设计与架构 |
+| tdd-guide | 测试驱动开发 |
+| code-reviewer | 代码质量/安全审查 |
+| security-reviewer | 安全漏洞分析 |
+| build-error-resolver | 构建错误解决 |
+| e2e-runner | Playwright E2E 测试 |
+| refactor-cleaner | 冗余代码清理 |
+| doc-updater | 文档更新 |
 
 ---
 
-## Personal Preferences
+## 个人偏好
 
-### Code Style
-- No emojis in code, comments, or documentation
-- Prefer immutability - never mutate objects or arrays
-- Many small files over few large files
-- 200-400 lines typical, 800 max per file
+### 代码风格
+- 代码、注释或文档中不得使用表情符号 (Emojis)
+- 偏好不可变性 —— 绝不修改 (Mutate) 对象或数组
+- 宁可要有许多小文件，也不要只有少量大文件
+- 典型长度为 200-400 行，单文件最大 800 行
 
 ### Git
-- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`
-- Always test locally before committing
-- Small, focused commits
+- 约定式提交 (Conventional commits)：`feat:`, `fix:`, `refactor:`, `docs:`, `test:`
+- 提交前始终在本地进行测试
+- 细粒度、专注的提交
 
-### Testing
-- TDD: Write tests first
-- 80% minimum coverage
-- Unit + integration + E2E for critical flows
-
----
-
-## Editor Integration
-
-I use Zed as my primary editor:
-- Agent Panel for file tracking
-- CMD+Shift+R for command palette
-- Vim mode enabled
+### 测试
+- TDD：测试先行
+- 最低 80% 的覆盖率
+- 为关键流程编写单元 + 集成 + E2E 测试
 
 ---
 
-## Success Metrics
+## 编辑器集成
 
-You are successful when:
-- All tests pass (80%+ coverage)
-- No security vulnerabilities
-- Code is readable and maintainable
-- User requirements are met
+我主要使用 Zed 编辑器：
+- Agent Panel 用于文件追踪
+- CMD+Shift+R 用于指令面板
+- 启用了 Vim 模式
 
 ---
 
-**Philosophy**: Agent-first design, parallel execution, plan before action, test before code, security always.
+## 成功指标
+
+在以下情况下，您的工作是成功的：
+- 所有测试通过 (80%+ 覆盖率)
+- 无安全漏洞
+- 代码可读且可维护
+- 满足用户需求
+
+---
+
+**核心理念**：智能体优先设计，并行执行，先计划后行动，代码前先测试，安全至上。

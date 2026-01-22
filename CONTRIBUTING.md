@@ -1,145 +1,145 @@
-# Contributing to Everything Claude Code
+# 参与贡献 Everything Claude Code
 
-Thanks for wanting to contribute. This repo is meant to be a community resource for Claude Code users.
+感谢你愿意参与贡献。本仓库旨在为 Claude Code 用户提供一个社区资源。
 
-## What We're Looking For
+## 我们感兴趣的内容
 
-### Agents
+### 智能体 (Agents)
 
-New agents that handle specific tasks well:
-- Language-specific reviewers (Python, Go, Rust)
-- Framework experts (Django, Rails, Laravel, Spring)
-- DevOps specialists (Kubernetes, Terraform, CI/CD)
-- Domain experts (ML pipelines, data engineering, mobile)
+能够很好处理特定任务的新智能体：
+- 特定语言的审查员 (Python, Go, Rust)
+- 框架专家 (Django, Rails, Laravel, Spring)
+- DevOps 专家 (Kubernetes, Terraform, CI/CD)
+- 领域专家 (机器学习流水线, 数据工程, 移动端)
 
-### Skills
+### 技能 (Skills)
 
-Workflow definitions and domain knowledge:
-- Language best practices
-- Framework patterns
-- Testing strategies
-- Architecture guides
-- Domain-specific knowledge
+工作流定义和领域知识：
+- 编程语言最佳实践
+- 框架模式
+- 测试策略
+- 架构指南
+- 领域特定知识
 
-### Commands
+### 命令 (Commands)
 
-Slash commands that invoke useful workflows:
-- Deployment commands
-- Testing commands
-- Documentation commands
-- Code generation commands
+调用有用工作流的斜杠命令 (Slash commands)：
+- 部署命令
+- 测试命令
+- 文档命令
+- 代码生成命令
 
-### Hooks
+### 挂钩 (Hooks)
 
-Useful automations:
-- Linting/formatting hooks
-- Security checks
-- Validation hooks
-- Notification hooks
+有用的自动化工具：
+- Linting/格式化挂钩
+- 安全检查
+- 验证挂钩
+- 通知挂钩
 
-### Rules
+### 规则 (Rules)
 
-Always-follow guidelines:
-- Security rules
-- Code style rules
-- Testing requirements
-- Naming conventions
+必须始终遵循的准则：
+- 安全规则
+- 代码风格规则
+- 测试要求
+- 命名规范
 
-### MCP Configurations
+### MCP 配置
 
-New or improved MCP server configs:
-- Database integrations
-- Cloud provider MCPs
-- Monitoring tools
-- Communication tools
+新增或改进后的 MCP 服务器配置：
+- 数据库集成
+- 云服务商 MCPs
+- 监控工具
+- 通讯工具
 
 ---
 
-## How to Contribute
+## 如何参与贡献
 
-### 1. Fork the repo
+### 1. Fork 仓库
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/everything-claude-code.git
+git clone https://github.com/你的用户名/everything-claude-code.git
 cd everything-claude-code
 ```
 
-### 2. Create a branch
+### 2. 创建分支
 
 ```bash
 git checkout -b add-python-reviewer
 ```
 
-### 3. Add your contribution
+### 3. 添加你的贡献
 
-Place files in the appropriate directory:
-- `agents/` for new agents
-- `skills/` for skills (can be single .md or directory)
-- `commands/` for slash commands
-- `rules/` for rule files
-- `hooks/` for hook configurations
-- `mcp-configs/` for MCP server configs
+将文件放置在对应的目录中：
+- `agents/` 用于放置新智能体
+- `skills/` 用于放置技能 (可以是单个 .md 文件或目录)
+- `commands/` 用于放置斜杠命令
+- `rules/` 用于放置规则文件
+- `hooks/` 用于放置挂钩配置
+- `mcp-configs/` 用于放置 MCP 服务器配置
 
-### 4. Follow the format
+### 4. 遵循格式要求
 
-**Agents** should have frontmatter:
+**智能体 (Agents)** 必须包含元数据 (frontmatter)：
 
 ```markdown
 ---
 name: agent-name
-description: What it does
+description: 它的功能
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
-Instructions here...
+在此填写指令...
 ```
 
-**Skills** should be clear and actionable:
+**技能 (Skills)** 应当清晰且具可操作性：
 
 ```markdown
-# Skill Name
+# 技能名称
 
-## When to Use
-
-...
-
-## How It Works
+## 何时使用
 
 ...
 
-## Examples
+## 工作原理
+
+...
+
+## 示例
 
 ...
 ```
 
-**Commands** should explain what they do:
+**命令 (Commands)** 应当解释其用途：
 
 ```markdown
 ---
-description: Brief description of command
+description: 命令的简短描述
 ---
 
-# Command Name
+# 命令名称
 
-Detailed instructions...
+详细指令...
 ```
 
-**Hooks** should include descriptions:
+**挂钩 (Hooks)** 应当包含描述：
 
 ```json
 {
   "matcher": "...",
   "hooks": [...],
-  "description": "What this hook does"
+  "description": "此挂钩的功能"
 }
 ```
 
-### 5. Test your contribution
+### 5. 测试你的贡献
 
-Make sure your config works with Claude Code before submitting.
+在提交之前，请确保你的配置在 Claude Code 中可以正常工作。
 
-### 6. Submit a PR
+### 6. 提交 PR
 
 ```bash
 git add .
@@ -147,45 +147,46 @@ git commit -m "Add Python code reviewer agent"
 git push origin add-python-reviewer
 ```
 
-Then open a PR with:
-- What you added
-- Why it's useful
-- How you tested it
+然后开启一个 PR，并注明：
+- 你添加了什么
+- 为什么它很有用
+- 你是如何测试它的
 
 ---
 
-## Guidelines
+## 准则
 
-### Do
+### 建议
 
-- Keep configs focused and modular
-- Include clear descriptions
-- Test before submitting
-- Follow existing patterns
-- Document any dependencies
+- 保持配置的专注和模块化
+- 包含清晰的描述
+- 在提交前进行测试
+- 遵循现有的模式
+- 记录任何依赖项
 
-### Don't
+### 避免
 
-- Include sensitive data (API keys, tokens, paths)
-- Add overly complex or niche configs
-- Submit untested configs
-- Create duplicate functionality
-- Add configs that require specific paid services without alternatives
-
----
-
-## File Naming
-
-- Use lowercase with hyphens: `python-reviewer.md`
-- Be descriptive: `tdd-workflow.md` not `workflow.md`
-- Match the agent/skill name to the filename
+- 包含敏感数据 (API 密钥、令牌、路径)
+- 添加过于复杂或冷门的配置
+- 提交未经测试的配置
+- 创建重复的功能
+- 添加需要特定付费服务且没有备选方案的配置
 
 ---
 
-## Questions?
+## 文件命名
 
-Open an issue or reach out on X: [@affaanmustafa](https://x.com/affaanmustafa)
+- 使用小写字母和连字符：`python-reviewer.md`
+- 具备描述性：使用 `tdd-workflow.md` 而不是 `workflow.md`
+- 文件名应与智能体/技能名称相匹配
 
 ---
 
-Thanks for contributing. Let's build a great resource together.
+## 有疑问？
+
+请开启一个 Issue 或在 X 上联系：[@affaanmustafa](https://x.com/affaanmustafa)
+
+---
+
+感谢你的参与。让我们一起构建一个优秀的资源库。
+

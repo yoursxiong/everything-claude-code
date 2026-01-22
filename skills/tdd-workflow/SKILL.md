@@ -1,409 +1,114 @@
 ---
 name: tdd-workflow
-description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
+description: 一种测试驱动开发 (TDD) 的工作流，用于在编写功能代码之前编写测试，确保代码 quality，减少缺陷，并创建一套稳健的自动化回归测试。
 ---
 
-# Test-Driven Development Workflow
+# 测试驱动开发 (TDD) 工作流
 
-This skill ensures all code development follows TDD principles with comprehensive test coverage.
+通过首先编写测试来指导开发的系统方法。
 
-## When to Activate
+## TDD 周期：红 - 绿 - 重构
 
-- Writing new features or functionality
-- Fixing bugs or issues
-- Refactoring existing code
-- Adding API endpoints
-- Creating new components
+### 1. 🔴 红色阶段 (编写失败的测试)
+- 编写一个能表达某个小功能或具体行为的单值测试。
+- 运行测试并观察它失败。如果不失败，说明该测试在此处是无意义的。
+- 此时不需要关心实现细节。
 
-## Core Principles
+### 2. 🟢 绿色阶段 (编写最简代码使测试通过)
+- 编写**尽可能少**的代码来通过测试。
+- 允许写出“丑陋”或非最优的代码，其目的仅在于快速达成测试通过的目标。
+- 再次运行测试并看到它变绿。
 
-### 1. Tests BEFORE Code
-ALWAYS write tests first, then implement code to make tests pass.
+### 3. 🔵 重构阶段 (优化代码)
+- 在**保持测试变绿**的前提下改进代码质量。
+- 消除重复 (DRY)，提高可读性。
+- 确立更好的变量命名和结构。
+- 将逻辑拆分为更小的函数或类。
 
-### 2. Coverage Requirements
-- Minimum 80% coverage (unit + integration + E2E)
-- All edge cases covered
-- Error scenarios tested
-- Boundary conditions verified
+## 何时采用 TDD？
 
-### 3. Test Types
+- **纯逻辑/算法**：例如计算相似度分值或处理复杂数据转换。
+- **错误处理**：确保边界情况（例如网络超时、无效输入）能被正确抛出。
+- **API 接口转换器**：确保外部数据结构被正确映射至内部类型。
+- **复杂查询逻辑**：确保根据各种过滤条件能正确返回结果集。
 
-#### Unit Tests
-- Individual functions and utilities
-- Component logic
-- Pure functions
-- Helpers and utilities
+## 示例：开发相似度计算器
 
-#### Integration Tests
-- API endpoints
-- Database operations
-- Service interactions
-- External API calls
-
-#### E2E Tests (Playwright)
-- Critical user flows
-- Complete workflows
-- Browser automation
-- UI interactions
-
-## TDD Workflow Steps
-
-### Step 1: Write User Journeys
-```
-As a [role], I want to [action], so that [benefit]
-
-Example:
-As a user, I want to search for markets semantically,
-so that I can find relevant markets even without exact keywords.
-```
-
-### Step 2: Generate Test Cases
-For each user journey, create comprehensive test cases:
-
+### 第一轮：红
 ```typescript
-describe('Semantic Search', () => {
-  it('returns relevant markets for query', async () => {
-    // Test implementation
-  })
+// tests/similarity.test.ts
+import { calculateSimilarity } from '../lib/similarity'
 
-  it('handles empty query gracefully', async () => {
-    // Test edge case
-  })
-
-  it('falls back to substring search when Redis unavailable', async () => {
-    // Test fallback behavior
-  })
-
-  it('sorts results by similarity score', async () => {
-    // Test sorting logic
-  })
+test('returns 1 for identical vectors', () => {
+  const v1 = [1, 0]
+  const v2 = [1, 0]
+  expect(calculateSimilarity(v1, v2)).toBe(1)
 })
 ```
 
-### Step 3: Run Tests (They Should Fail)
-```bash
-npm test
-# Tests should fail - we haven't implemented yet
-```
+运行测试：**🔴 失败** (找不到 `calculateSimilarity`)
 
-### Step 4: Implement Code
-Write minimal code to make tests pass:
-
+### 第一轮：绿
 ```typescript
-// Implementation guided by tests
-export async function searchMarkets(query: string) {
-  // Implementation here
+// lib/similarity.ts
+export function calculateSimilarity(v1: number[], v2: number[]) {
+  return 1 // 最简单的实现
 }
 ```
 
-### Step 5: Run Tests Again
-```bash
-npm test
-# Tests should now pass
-```
+运行测试：**🟢 通过**
 
-### Step 6: Refactor
-Improve code quality while keeping tests green:
-- Remove duplication
-- Improve naming
-- Optimize performance
-- Enhance readability
+### 第一轮：重构
+鉴于逻辑极简，目前暂无需重构。
 
-### Step 7: Verify Coverage
-```bash
-npm run test:coverage
-# Verify 80%+ coverage achieved
-```
-
-## Testing Patterns
-
-### Unit Test Pattern (Jest/Vitest)
+### 第二轮：红
 ```typescript
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Button } from './Button'
-
-describe('Button Component', () => {
-  it('renders with correct text', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByText('Click me')).toBeInTheDocument()
-  })
-
-  it('calls onClick when clicked', () => {
-    const handleClick = jest.fn()
-    render(<Button onClick={handleClick}>Click</Button>)
-
-    fireEvent.click(screen.getByRole('button'))
-
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
-
-  it('is disabled when disabled prop is true', () => {
-    render(<Button disabled>Click</Button>)
-    expect(screen.getByRole('button')).toBeDisabled()
-  })
+test('returns 0 for orthogonal vectors', () => {
+  const v1 = [1, 0]
+  const v2 = [0, 1]
+  expect(calculateSimilarity(v1, v2)).toBe(0)
 })
 ```
 
-### API Integration Test Pattern
+运行测试：**🔴 失败** (预期 0，实际收到 1)
+
+### 第二轮：绿
 ```typescript
-import { NextRequest } from 'next/server'
-import { GET } from './route'
-
-describe('GET /api/markets', () => {
-  it('returns markets successfully', async () => {
-    const request = new NextRequest('http://localhost/api/markets')
-    const response = await GET(request)
-    const data = await response.json()
-
-    expect(response.status).toBe(200)
-    expect(data.success).toBe(true)
-    expect(Array.isArray(data.data)).toBe(true)
-  })
-
-  it('validates query parameters', async () => {
-    const request = new NextRequest('http://localhost/api/markets?limit=invalid')
-    const response = await GET(request)
-
-    expect(response.status).toBe(400)
-  })
-
-  it('handles database errors gracefully', async () => {
-    // Mock database failure
-    const request = new NextRequest('http://localhost/api/markets')
-    // Test error handling
-  })
-})
-```
-
-### E2E Test Pattern (Playwright)
-```typescript
-import { test, expect } from '@playwright/test'
-
-test('user can search and filter markets', async ({ page }) => {
-  // Navigate to markets page
-  await page.goto('/')
-  await page.click('a[href="/markets"]')
-
-  // Verify page loaded
-  await expect(page.locator('h1')).toContainText('Markets')
-
-  // Search for markets
-  await page.fill('input[placeholder="Search markets"]', 'election')
-
-  // Wait for debounce and results
-  await page.waitForTimeout(600)
-
-  // Verify search results displayed
-  const results = page.locator('[data-testid="market-card"]')
-  await expect(results).toHaveCount(5, { timeout: 5000 })
-
-  // Verify results contain search term
-  const firstResult = results.first()
-  await expect(firstResult).toContainText('election', { ignoreCase: true })
-
-  // Filter by status
-  await page.click('button:has-text("Active")')
-
-  // Verify filtered results
-  await expect(results).toHaveCount(3)
-})
-
-test('user can create a new market', async ({ page }) => {
-  // Login first
-  await page.goto('/creator-dashboard')
-
-  // Fill market creation form
-  await page.fill('input[name="name"]', 'Test Market')
-  await page.fill('textarea[name="description"]', 'Test description')
-  await page.fill('input[name="endDate"]', '2025-12-31')
-
-  // Submit form
-  await page.click('button[type="submit"]')
-
-  // Verify success message
-  await expect(page.locator('text=Market created successfully')).toBeVisible()
-
-  // Verify redirect to market page
-  await expect(page).toHaveURL(/\/markets\/test-market/)
-})
-```
-
-## Test File Organization
-
-```
-src/
-├── components/
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   ├── Button.test.tsx          # Unit tests
-│   │   └── Button.stories.tsx       # Storybook
-│   └── MarketCard/
-│       ├── MarketCard.tsx
-│       └── MarketCard.test.tsx
-├── app/
-│   └── api/
-│       └── markets/
-│           ├── route.ts
-│           └── route.test.ts         # Integration tests
-└── e2e/
-    ├── markets.spec.ts               # E2E tests
-    ├── trading.spec.ts
-    └── auth.spec.ts
-```
-
-## Mocking External Services
-
-### Supabase Mock
-```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({
-          data: [{ id: 1, name: 'Test Market' }],
-          error: null
-        }))
-      }))
-    }))
+export function calculateSimilarity(v1: number[], v2: number[]) {
+  // 足够使这一步通过的代码
+  let dotProduct = 0
+  for (let i = 0; i < v1.length; i++) {
+    dotProduct += v1[i] * v2[i]
   }
-}))
-```
-
-### Redis Mock
-```typescript
-jest.mock('@/lib/redis', () => ({
-  searchMarketsByVector: jest.fn(() => Promise.resolve([
-    { slug: 'test-market', similarity_score: 0.95 }
-  ])),
-  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true }))
-}))
-```
-
-### OpenAI Mock
-```typescript
-jest.mock('@/lib/openai', () => ({
-  generateEmbedding: jest.fn(() => Promise.resolve(
-    new Array(1536).fill(0.1) // Mock 1536-dim embedding
-  ))
-}))
-```
-
-## Test Coverage Verification
-
-### Run Coverage Report
-```bash
-npm run test:coverage
-```
-
-### Coverage Thresholds
-```json
-{
-  "jest": {
-    "coverageThresholds": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  }
+  return dotProduct
 }
 ```
 
-## Common Testing Mistakes to Avoid
+运行测试：**🟢 通过**
 
-### ❌ WRONG: Testing Implementation Details
+### 第二轮：重构
 ```typescript
-// Don't test internal state
-expect(component.state.count).toBe(5)
+// 将计算逻辑提取至 helper
+const dot = (a: number[], b: number[]) => a.reduce((sum, val, i) => sum + val * b[i], 0)
+
+export function calculateSimilarity(v1: number[], v2: number[]) {
+  return dot(v1, v2)
+}
 ```
 
-### ✅ CORRECT: Test User-Visible Behavior
-```typescript
-// Test what users see
-expect(screen.getByText('Count: 5')).toBeInTheDocument()
-```
+运行测试：**🟢 通过** (重构成功，行为未变)
 
-### ❌ WRONG: Brittle Selectors
-```typescript
-// Breaks easily
-await page.click('.css-class-xyz')
-```
+## TDD 的黄金法则
 
-### ✅ CORRECT: Semantic Selectors
-```typescript
-// Resilient to changes
-await page.click('button:has-text("Submit")')
-await page.click('[data-testid="submit-button"]')
-```
+1. **先写测试**：决不在没有失败测试的情况下编写功能代码。
+2. **一次只写一个测试**：不要一次性编写全套测试集，应逐个迭代。
+3. **只写能通过测试的代码**：不要在当前测试之外添加额外的猜测性逻辑。
+4. **变绿后再重构**：切勿在测试仍为红色时尝试优化或重构，因为那样做会失去安全护栏。
 
-### ❌ WRONG: No Test Isolation
-```typescript
-// Tests depend on each other
-test('creates user', () => { /* ... */ })
-test('updates same user', () => { /* depends on previous test */ })
-```
+## 常见障碍
 
-### ✅ CORRECT: Independent Tests
-```typescript
-// Each test sets up its own data
-test('creates user', () => {
-  const user = createTestUser()
-  // Test logic
-})
+- **难以模拟 (Mockging)**：请将业务逻辑与 I/O (数据库, API 网络请求) 分离。仅针对纯逻辑部分进行 TDD。
+- **速度慢**：确保您的测试框架配置为观察模式 (`--watch`) 且仅运行相关的测试。
+- **需求不明确**：如果尚不清楚功能应如何运作，可以先进行技术验证 (Spike / Prototyping)，待厘清后再应用 TDD。
 
-test('updates user', () => {
-  const user = createTestUser()
-  // Update logic
-})
-```
-
-## Continuous Testing
-
-### Watch Mode During Development
-```bash
-npm test -- --watch
-# Tests run automatically on file changes
-```
-
-### Pre-Commit Hook
-```bash
-# Runs before every commit
-npm test && npm run lint
-```
-
-### CI/CD Integration
-```yaml
-# GitHub Actions
-- name: Run Tests
-  run: npm test -- --coverage
-- name: Upload Coverage
-  uses: codecov/codecov-action@v3
-```
-
-## Best Practices
-
-1. **Write Tests First** - Always TDD
-2. **One Assert Per Test** - Focus on single behavior
-3. **Descriptive Test Names** - Explain what's tested
-4. **Arrange-Act-Assert** - Clear test structure
-5. **Mock External Dependencies** - Isolate unit tests
-6. **Test Edge Cases** - Null, undefined, empty, large
-7. **Test Error Paths** - Not just happy paths
-8. **Keep Tests Fast** - Unit tests < 50ms each
-9. **Clean Up After Tests** - No side effects
-10. **Review Coverage Reports** - Identify gaps
-
-## Success Metrics
-
-- 80%+ code coverage achieved
-- All tests passing (green)
-- No skipped or disabled tests
-- Fast test execution (< 30s for unit tests)
-- E2E tests cover critical user flows
-- Tests catch bugs before production
-
----
-
-**Remember**: Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.
+**提示**：将 TDD 与热更新或观察模式结合使用。让测试保持在后台持续运行，当您打字时，它们会不断为您提供实时的正确性反馈。

@@ -1,10 +1,10 @@
 #!/bin/bash
-# Stop Hook (Session End) - Persist learnings when session ends
+# Stop Hook (Session End) - 会话结束时持久化学习内容
 #
-# Runs when Claude session ends. Creates/updates session log file
-# with timestamp for continuity tracking.
+# 在 Claude 会话结束时运行。创建/更新会话日志文件，
+# 带有时间戳以进行连续性追踪。
 #
-# Hook config (in ~/.claude/settings.json):
+# Hook 配置 (位于 ~/.claude/settings.json):
 # {
 #   "hooks": {
 #     "Stop": [{
@@ -23,39 +23,39 @@ SESSION_FILE="${SESSIONS_DIR}/${TODAY}-session.tmp"
 
 mkdir -p "$SESSIONS_DIR"
 
-# If session file exists for today, update the end time
+# 如果今天的会话文件已存在，更新结束时间
 if [ -f "$SESSION_FILE" ]; then
-  # Update Last Updated timestamp
+  # 更新“上次更新”时间戳
   sed -i '' "s/\*\*Last Updated:\*\*.*/\*\*Last Updated:\*\* $(date '+%H:%M')/" "$SESSION_FILE" 2>/dev/null || \
   sed -i "s/\*\*Last Updated:\*\*.*/\*\*Last Updated:\*\* $(date '+%H:%M')/" "$SESSION_FILE" 2>/dev/null
-  echo "[SessionEnd] Updated session file: $SESSION_FILE" >&2
+  echo "[SessionEnd] 已更新会话文件: $SESSION_FILE" >&2
 else
-  # Create new session file with template
+  # 使用模板创建新会话文件
   cat > "$SESSION_FILE" << EOF
-# Session: $(date '+%Y-%m-%d')
-**Date:** $TODAY
-**Started:** $(date '+%H:%M')
-**Last Updated:** $(date '+%H:%M')
+# 会话: $(date '+%Y-%m-%d')
+**日期:** $TODAY
+**开始时间:** $(date '+%H:%M')
+**上次更新:** $(date '+%H:%M')
 
 ---
 
-## Current State
+## 当前状态
 
-[Session context goes here]
+[会话上下文在此处显示]
 
-### Completed
+### 已完成
 - [ ]
 
-### In Progress
+### 进行中
 - [ ]
 
-### Notes for Next Session
+### 下次会话笔记
 -
 
-### Context to Load
+### 需要加载的上下文
 \`\`\`
-[relevant files]
+[相关文件]
 \`\`\`
 EOF
-  echo "[SessionEnd] Created session file: $SESSION_FILE" >&2
+  echo "[SessionEnd] 已创建会话文件: $SESSION_FILE" >&2
 fi
